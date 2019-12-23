@@ -1,0 +1,17 @@
+{
+  "name": "com.sourcemuch.quickeditor.common",
+  "displayName": "Quick Editor Common",
+  "version": "0.1.0-preview",
+  "unity": "2018.1",
+  "unityRelease": "0f1",
+  "description": "This is a package that contains shared functionalities that are used by the other QuickEditor packages.",
+  "keywords": [ "editor", "attributes", "extension", "unity" ],
+  "author": {
+    "name": "Henry Hu",
+    "email": "henry890307@yeah.net",
+    "url": "https://github.com/henry-yuxi"
+  },
+  "license": "MIT",
+  "type": "library",
+  "dependencies": {}
+}
