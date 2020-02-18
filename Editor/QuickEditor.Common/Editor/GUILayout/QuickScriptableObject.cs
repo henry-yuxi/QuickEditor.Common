@@ -15,7 +15,7 @@ namespace QuickEditor.Common
             {
                 if (mSetting == null)
                 {
-                    mSetting = QuickAssetStaticAPI.LoadOrCreateAssetFromFindAssets<T>(false);
+                    mSetting = QuickAssetDatabase.LoadAssetFromUniqueAsset<T>(false);
                 }
                 return mSetting;
             }

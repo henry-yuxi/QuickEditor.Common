@@ -6,12 +6,18 @@
     using UnityEditor;
     using UnityEngine;
 
-    public class QuickAssetStaticAPI
+    public class QuickAssetDatabase
     {
         public enum AssetPathMode
         {
             SelectionAssetPath,
             ScriptableObjectAssetPath,
+        }
+
+        public static bool ContainsAsset<T>() where T : ScriptableObject
+        {
+            string[] guids = FindAssets<T>();
+            return guids != null && guids.Length > 0;
         }
 
         public static T CreateAssetProjectWindow<T>(string filename) where T : ScriptableObject
@@ -24,7 +30,7 @@
         public static T CreateAsset<T>(AssetPathMode type = AssetPathMode.ScriptableObjectAssetPath) where T : ScriptableObject
         {
             T asset = ScriptableObject.CreateInstance<T>();
-            return CreateAsset(asset, (type == AssetPathMode.ScriptableObjectAssetPath ? asset.GetScriptableObjectPath() : QuickPathStaticAPI.SelectionAssetPath)) as T;
+            return CreateAsset(asset, (type == AssetPathMode.ScriptableObjectAssetPath ? asset.GetScriptableObjectPath() : QuickPathUtils.SelectionAssetPath)) as T;
         }
 
         public static T CreateAsset<T>(string targetPath) where T : ScriptableObject
@@ -36,66 +42,68 @@
 
         public static UnityEngine.Object CreateAsset(ScriptableObject asset, AssetPathMode type = AssetPathMode.ScriptableObjectAssetPath)
         {
-            return CreateAsset(asset, (type == AssetPathMode.ScriptableObjectAssetPath ? asset.GetScriptableObjectPath() : QuickPathStaticAPI.SelectionAssetPath));
+            return CreateAsset(asset, (type == AssetPathMode.ScriptableObjectAssetPath ? asset.GetScriptableObjectPath() : QuickPathUtils.SelectionAssetPath));
         }
 
         public static UnityEngine.Object CreateAsset(UnityEngine.Object asset, string targetPath)
         {
             string fileName = AssetDatabase.GenerateUniqueAssetPath(targetPath + "/" + asset.GetType().Name + ".asset");
 
-            BuildAsset(asset, fileName);
+            CreateAndSaveAsset(asset, fileName);
             EditorUtility.FocusProjectWindow();
             Selection.activeObject = asset;
             return asset;
         }
 
-        public static void BuildAsset(UnityEngine.Object asset, string path)
+        public static void CreateAndSaveAsset(UnityEngine.Object asset, string path)
         {
             AssetDatabase.CreateAsset(asset, path);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
         }
 
-        public static T LoadAsset<T>(string path) where T : UnityEngine.Object
-        {
-            return AssetDatabase.LoadAssetAtPath<T>(path);
-        }
-
-        public static T LoadOrCreateAsset<T>(string path) where T : ScriptableObject
-        {
-            var temp = LoadAsset<T>(path);
-            return temp ?? CreateAsset<T>(path);
-        }
-
         public static bool DeleteAsset(string path)
         {
             var file = new FileInfo(path);
-            if (!file.Exists)
-                return false;
+            if (!file.Exists) { return false; }
             file.Delete();
             return true;
         }
 
-        public static UnityEngine.Object ObjectFromGUID(string guid)
+        public static T LoadAsset<T>(string path, bool needCreateIfExist = true) where T : ScriptableObject
         {
-            return AssetDatabase.LoadAssetAtPath(AssetDatabase.GUIDToAssetPath(guid), typeof(UnityEngine.Object)) as UnityEngine.Object;
+            T asset = default(T);
+            if (string.IsNullOrEmpty(path)) { return asset; }
+            asset = AssetDatabase.LoadAssetAtPath<T>(path) as T;
+            if (asset == null && needCreateIfExist)
+            {
+                asset = CreateAsset<T>(path);
+            }
+            return asset;
         }
 
-        public static T InstanciateScriptableObject<T>(string path) where T : ScriptableObject
+        public static T LoadAssetFromGUID<T>(string guid) where T : ScriptableObject
         {
-            return InstanciateScriptableObject<T>(path, typeof(T).Name);
+            T asset = default(T);
+            if (string.IsNullOrEmpty(guid)) { return asset; }
+            return AssetDatabase.LoadAssetAtPath(AssetDatabase.GUIDToAssetPath(guid), typeof(UnityEngine.Object)) as T;
         }
 
-        public static T InstanciateScriptableObject<T>(string path, string fileName) where T : ScriptableObject
+        public static T LoadAssetFromUniqueAsset<T>(string path) where T : ScriptableObject
+        {
+            return LoadAssetFromUniqueAsset<T>(path, typeof(T).Name);
+        }
+
+        public static T LoadAssetFromUniqueAsset<T>(string targetPath, string fileName) where T : ScriptableObject
         {
             T asset = ScriptableObject.CreateInstance<T>();
-            var uniquePath = AssetDatabase.GenerateUniqueAssetPath(path + fileName + ".asset");
-            BuildAsset(asset, uniquePath);
+            var uniquePath = AssetDatabase.GenerateUniqueAssetPath(targetPath + "/" + fileName + ".asset");
+            CreateAndSaveAsset(asset, uniquePath);
             var final = AssetDatabase.LoadAssetAtPath(uniquePath, typeof(T)) as T;
             return final;
         }
 
-        public static T LoadOrCreateAssetFromFindAssets<T>(bool mFocusProjectWindow = true) where T : ScriptableObject
+        public static T LoadAssetFromUniqueAsset<T>(bool mFocusProjectWindow = true) where T : ScriptableObject
         {
             T asset = default(T);
             asset = (T)AssetDatabase.LoadAssetAtPath(FindAssetPath<T>(), typeof(T));
@@ -103,7 +111,7 @@
             {
                 asset = ScriptableObject.CreateInstance<T>();
                 string fileName = AssetDatabase.GenerateUniqueAssetPath(asset.GetScriptableObjectPath() + "/Resources/" + asset.GetType().Name + ".asset");
-                BuildAsset(asset, fileName);
+                CreateAndSaveAsset(asset, fileName);
             }
             if (mFocusProjectWindow)
             {
@@ -129,7 +137,7 @@
         {
             string[] guids = FindAssets<T>();
 
-            if (guids.Length > 0)
+            if (guids != null && guids.Length > 0)
             {
                 if (guids.Length > 1)
                 {

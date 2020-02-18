@@ -8,7 +8,7 @@
     using UnityEngine;
     using UnityEngine.Internal;
 
-    public static class QuickGUIStaticAPI
+    public static class QuickGUILayout
     {
         #region UNITY API 重写
 
@@ -115,10 +115,10 @@
             EditorGUI.BeginChangeCheck();
         }
 
-        public static bool EndChangeCheck() {
+        public static bool EndChangeCheck()
+        {
             return EditorGUI.EndChangeCheck();
         }
-
 
         public static void EndChangeCheck(UnityEngine.Object target)
         {
@@ -478,10 +478,10 @@
                 mReorderableList.showDefaultBackground = false;
                 mReorderableList.drawElementCallback = drawElementCallback;
             }
-            QuickGUIStaticAPI.Space();
+            QuickGUILayout.Space();
             using (new QuickEditorGUILayout.HorizontalBlock())
             {
-                QuickGUIStaticAPI.Space();
+                QuickGUILayout.Space();
                 if (GUILayout.Button(EditorGUIUtility.FindTexture("Toolbar Plus"), GUIStyle.none, GUILayout.Width(16)))
                 {
                     list.Add(Activator.CreateInstance(listType));
@@ -489,7 +489,7 @@
                     mReorderableList.GrabKeyboardFocus();
                     mSettingsScrollPosition.y = float.MaxValue;
                 }
-                QuickGUIStaticAPI.Space();
+                QuickGUILayout.Space();
                 if (GUILayout.Button(EditorGUIUtility.FindTexture("Toolbar Minus"), GUIStyle.none, GUILayout.Width(16)))
                 {
                     if (mReorderableList.index >= 0 && mReorderableList.index <= list.Count - 1)
@@ -500,17 +500,17 @@
                         mReorderableList.GrabKeyboardFocus();
                     }
                 }
-                QuickGUIStaticAPI.FlexibleSpace();
+                QuickGUILayout.FlexibleSpace();
                 if (enableAction != null)
                 {
-                    QuickGUIStaticAPI.Button("Enable.All", EditorStyles.miniButtonRight, () =>
+                    QuickGUILayout.Button("Enable.All", EditorStyles.miniButtonRight, () =>
                     {
                         enableAction();
                     });
                 }
                 if (disableAction != null)
                 {
-                    QuickGUIStaticAPI.Button("Disable.All", EditorStyles.miniButtonLeft, () =>
+                    QuickGUILayout.Button("Disable.All", EditorStyles.miniButtonLeft, () =>
                     {
                         disableAction();
                     });
@@ -518,7 +518,7 @@
             }
 
             //QEditorGUIStaticAPI.Space();
-            QuickGUIStaticAPI.DrawRect(EditorGUILayout.GetControlRect(false, 2), QuickEditorColors.WhiteCoffee);
+            QuickGUILayout.DrawRect(EditorGUILayout.GetControlRect(false, 2), QuickEditorColors.WhiteCoffee);
 
             using (var scroll = new EditorGUILayout.ScrollViewScope(mReorderableScrollPosition))
             {
@@ -773,7 +773,7 @@
                     string currentDirectory = path;
                     if (string.IsNullOrEmpty(path))
                     {
-                        currentDirectory = QuickPathStaticAPI.AssetPathNodeName;
+                        currentDirectory = QuickPathUtils.AssetsRootDir;
                     }
                     string selectStr = EditorUtility.OpenFilePanel(title, currentDirectory, extension);
                     if (!string.IsNullOrEmpty(selectStr) && selectStr.Contains("Assets"))

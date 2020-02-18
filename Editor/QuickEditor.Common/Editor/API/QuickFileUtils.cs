@@ -6,7 +6,7 @@
     using UnityEditor;
     using UnityEngine;
 
-    public static class QuickFileStaticAPI
+    public static class QuickFileUtils
     {
         #region Directory
 

@@ -5,7 +5,7 @@
     using UnityEditor;
     using UnityEngine;
 
-    public class QuickSelectIconStaticAPI
+    public class QuickSelectIconUtils
     {
         #region 数据定义
 
