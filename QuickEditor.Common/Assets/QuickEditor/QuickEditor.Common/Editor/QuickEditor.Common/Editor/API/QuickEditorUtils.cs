@@ -4,7 +4,7 @@
     using UnityEditor;
     using UnityEngine;
 
-    public static class QuickEditorStaticAPI
+    public static class QuickEditorUtils
     {
         public static void SetAppIcon(BuildTargetGroup group, Texture2D texture)
         {

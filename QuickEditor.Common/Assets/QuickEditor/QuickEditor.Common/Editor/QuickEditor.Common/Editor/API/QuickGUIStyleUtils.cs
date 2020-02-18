@@ -3,7 +3,7 @@
     using UnityEditor;
     using UnityEngine;
 
-    public static class QuickGUIStyleStaticAPI
+    public static class QuickGUIStyleUtils
     {
         public static GUIStyle GetEditorStyle(string style)
         {

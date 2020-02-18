@@ -4,3 +4,9 @@ QuickEditor.Common/Temp/
 QuickEditor.Common/Library/
 
 QuickEditor.Common/Packages/
+
+QuickEditor.Common/.vs/
+
+QuickEditor.Common/obj/
+
+*.csproj

@@ -5,7 +5,7 @@
 
     using Type = System.Type;
 
-    public static class QuickLayoutStaticAPI
+    public static class QuickLayoutUtils
     {
         private static MethodInfo _miLoadWindowLayout;
         private static MethodInfo _miSaveWindowLayout;
@@ -13,7 +13,7 @@
 
         private static bool _available;
 
-        static QuickLayoutStaticAPI()
+        static QuickLayoutUtils()
         {
             Type tyWindowLayout = Type.GetType("UnityEditor.WindowLayout,UnityEditor");
             Type tyEditorUtility = Type.GetType("UnityEditor.EditorUtility,UnityEditor");

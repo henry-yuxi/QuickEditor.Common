@@ -38,32 +38,32 @@
         Resources,
     }
 
-    public static class QuickPathStaticAPI
+    public static class QuickPathUtils
     {
-        public static readonly string AssetPathNodeName = "Assets";
+        public static readonly string AssetsRootDir = "Assets/";
 
-        public static string AssetsPath = string.Empty;
+        public static string AssetsDataPath = string.Empty;
         public static string PersistentDataPath = string.Empty;
-        public static string ProjectPath = string.Empty;
-        public static string ResourcesPath = string.Empty;
         public static string StreamingAsstesPath = string.Empty;
         public static string TemporaryCachePath = string.Empty;
+        public static string ProjectPath = string.Empty;
+        public static string ResourcesPath = string.Empty;
 
-        static QuickPathStaticAPI()
+        static QuickPathUtils()
         {
-            AssetsPath = Application.dataPath;
+            AssetsDataPath = Application.dataPath;
             PersistentDataPath = Application.persistentDataPath;
-            ProjectPath = string.Format("{0}/", Path.GetDirectoryName(AssetsPath));
-            ResourcesPath = AssetsPath + "/Resources";
             StreamingAsstesPath = Application.streamingAssetsPath;
             TemporaryCachePath = Application.temporaryCachePath;
+            ProjectPath = string.Format("{0}/", Path.GetDirectoryName(AssetsDataPath));
+            ResourcesPath = AssetsDataPath + "/Resources";
         }
 
         public static string SelectionAssetPath
         {
             get
             {
-                string selectionpath = "Assets";
+                string selectionpath = AssetsRootDir;
                 int length = Selection.assetGUIDs.Length;
                 if (length >= 1)
                 {
@@ -97,9 +97,9 @@
         {
             if (assetName.Equals(string.Empty))
             {
-                return "Assets/";
+                return AssetsRootDir;
             }
-            return Combine("Assets/", assetName);
+            return Combine(AssetsRootDir, assetName);
         }
 
         /// <summary>
@@ -109,7 +109,7 @@
         /// <returns></returns>
         public static string GlobalPathToRelative(this string path)
         {
-            if (path.Equals(string.Empty)) { return "Assets/"; }
+            if (path.Equals(string.Empty)) { return AssetsRootDir; }
             if (path.StartsWith(Application.dataPath))
                 return "Assets" + path.Substring(Application.dataPath.Length);
             else
@@ -131,7 +131,7 @@
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static string UnixToWindowsPath(this string path)
+        public static string MakeWindowsFormatPath(this string path)
         {
             return path.Replace("/", "\\");
         }
@@ -141,23 +141,17 @@
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static string WindowsToUnixPath(this string path)
+        public static string MakeUnixFormatPath(this string path)
         {
-            return path.Replace("\\", "/");
-        }
-
-        /// <summary>　　
-        /// 格式化路径成Asset的标准格式　
-        /// </summary>
-        /// <param name="filePath"></param>
-        /// <returns></returns>
-        public static string FormatAssetPath(string filePath)
-        {
-            var newFilePath1 = filePath.Replace("\\", "/");
-            var newFilePath2 = newFilePath1.Replace("//", "/").Trim();
-            newFilePath2 = newFilePath2.Replace("///", "/").Trim();
-            newFilePath2 = newFilePath2.Replace("\\\\", "/").Trim();
-            return newFilePath2;
+            if (string.IsNullOrEmpty(path))
+            {
+                return path;
+            }
+            var path1 = path.Replace("\\", "/");
+            var path2 = path1.Replace("//", "/").Trim();
+            path2 = path2.Replace("///", "/").Trim();
+            path2 = path2.Replace("\\\\", "/").Trim();
+            return path2;
         }
 
         private static string FormatPath(string path)
