@@ -4,18 +4,18 @@ namespace QuickEditor.Common
 {
     using System.Diagnostics;
 
-    public class QuickProcessStaticAPI
+    public class QuickProcessUtils
     {
         [Conditional("UNITY_EDITOR_WIN")]
         public static void ExecuteNotepadCommand(string args)
         {
-            QuickProcessStaticAPI.ProcessCommand("notepad.exe", args);
+            QuickProcessUtils.ProcessCommand("notepad.exe", args);
         }
 
         [Conditional("UNITY_EDITOR_WIN")]
         public static void ExecuteTortoiseSVNCommand(string args)
         {
-            QuickProcessStaticAPI.ProcessCommand("TortoiseProc.exe", args, true, null, true);
+            QuickProcessUtils.ProcessCommand("TortoiseProc.exe", args, true, null, true);
         }
 
         public static void ProcessCommand(string processName, string args, bool withWindow = true, string workingDir = "", bool useShellExecute = false)

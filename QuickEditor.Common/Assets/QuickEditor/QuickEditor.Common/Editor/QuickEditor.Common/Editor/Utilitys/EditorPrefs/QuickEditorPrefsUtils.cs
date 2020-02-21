@@ -3,7 +3,7 @@
     using UnityEditor;
     using UnityEngine.Internal;
 
-    public sealed class QuickEditorPrefsStaticAPI
+    public sealed class QuickEditorPrefsUtils
     {
         public static bool HasKey(string key)
         {
