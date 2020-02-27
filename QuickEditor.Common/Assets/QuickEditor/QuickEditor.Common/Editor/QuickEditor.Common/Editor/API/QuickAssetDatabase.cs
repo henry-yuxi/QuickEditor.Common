@@ -48,7 +48,6 @@
         public static UnityEngine.Object CreateAsset(UnityEngine.Object asset, string targetPath)
         {
             string fileName = AssetDatabase.GenerateUniqueAssetPath(targetPath + "/" + asset.GetType().Name + ".asset");
-
             CreateAndSaveAsset(asset, fileName);
             EditorUtility.FocusProjectWindow();
             Selection.activeObject = asset;
@@ -70,14 +69,14 @@
             return true;
         }
 
-        public static T LoadAsset<T>(string path, bool needCreateIfExist = true) where T : ScriptableObject
+        public static T LoadAsset<T>(string targetPath, bool needCreateIfExist = true) where T : ScriptableObject
         {
             T asset = default(T);
-            if (string.IsNullOrEmpty(path)) { return asset; }
-            asset = AssetDatabase.LoadAssetAtPath<T>(path) as T;
+            if (string.IsNullOrEmpty(targetPath)) { return asset; }
+            asset = (T)AssetDatabase.LoadAssetAtPath(FindAssetPath<T>(), typeof(T));
             if (asset == null && needCreateIfExist)
             {
-                asset = CreateAsset<T>(path);
+                asset = CreateAsset<T>(targetPath);
             }
             return asset;
         }
@@ -145,7 +144,7 @@
                 }
                 return AssetDatabase.GUIDToAssetPath(guids[0]);
             }
-            Debug.LogError("File not found " + typeof(T).FullName);
+            Debug.LogError(string.Format("Asset [{0}.asset] not found", typeof(T).FullName));
             return string.Empty;
         }
 

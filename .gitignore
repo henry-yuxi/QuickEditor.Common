@@ -10,3 +10,7 @@ QuickEditor.Common/.vs/
 QuickEditor.Common/obj/
 
 *.csproj
+
+QuickEditor.Common/Logs/
+
+*.sln
