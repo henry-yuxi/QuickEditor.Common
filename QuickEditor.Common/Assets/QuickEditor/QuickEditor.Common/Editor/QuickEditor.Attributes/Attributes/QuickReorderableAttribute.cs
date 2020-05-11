@@ -1,8 +1,8 @@
-﻿using System;
-using UnityEngine;
-
-namespace QuickEditor.Attributes
+﻿namespace QuickEditor.Attributes
 {
+    using System;
+    using UnityEngine;
+
     public class QuickReorderableAttribute : PropertyAttribute
     {
         public bool add;

@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using UnityEditor;
-using UnityEngine;
-
-namespace QuickEditor.Attributes.Editor
+﻿namespace QuickEditor.Attributes.Editor
 {
+    using System.Collections.Generic;
+    using UnityEditor;
+    using UnityEngine;
+
     [CustomPropertyDrawer(typeof(QuickReorderableAttribute))]
     public class QuickReorderableDrawer : PropertyDrawer
     {

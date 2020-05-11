@@ -50,6 +50,32 @@ namespace QuickEditor.Common
         }
 
         /// <summary>
+        /// 是否启用标题UI
+        /// </summary>
+        protected virtual bool IsEnableTitleGUI { get { return true; } }
+
+        /// <summary>
+        /// 初始化
+        /// </summary>
+        public virtual void Initialization()
+        {
+        }
+
+        /// <summary>
+        /// 标题UI
+        /// </summary>
+        protected virtual void OnTitleGUI()
+        {
+        }
+
+        /// <summary>
+        /// 窗体UI
+        /// </summary>
+        protected virtual void OnBodyGUI()
+        {
+        }
+
+        /// <summary>
         /// 当打开界面的时候调用
         /// </summary>
         protected virtual void OnEnable()
@@ -97,6 +123,14 @@ namespace QuickEditor.Common
         /// </summary>
         protected virtual void OnGUI()
         {
+            if (IsEnableTitleGUI)
+            {
+                GUILayout.BeginHorizontal(EditorStyles.toolbar);
+                OnTitleGUI();
+                GUILayout.EndHorizontal();
+            }
+
+            OnBodyGUI();
         }
 
         /// <summary>
@@ -118,6 +152,22 @@ namespace QuickEditor.Common
         /// </summary>
         protected virtual void OnDestroy()
         {
+        }
+
+        /// <summary>
+        /// 标记目标已改变
+        /// </summary>
+        protected void HasChanged(Object target)
+        {
+            if (!EditorApplication.isPlaying && target != null)
+            {
+                EditorUtility.SetDirty(target);
+                Component comp = target as Component;
+                if (comp != null && comp.gameObject.scene != null)
+                {
+                    UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(comp.gameObject.scene);
+                }
+            }
         }
     }
 }
